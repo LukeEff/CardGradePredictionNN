@@ -55,8 +55,8 @@ def train_cnn_model(num_classes = 5, load_latest_model = False):
             use_pretrained=True
         )
     train_dataset = ds.init_dataset('train')
-    test_dataset = ds.init_dataset('test')
-    model, history = train_model(model=model, train_dataset=train_dataset, test_dataset=test_dataset)
+    validation_dataset = ds.init_dataset('train')
+    model, history = train_model(model=model, train_dataset=train_dataset, valid_dataset=validation_dataset)
 
     # Pickle best performing model.
     open_file_path = os.path.join("..", "models", "best_model.p")
