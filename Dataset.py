@@ -2,10 +2,11 @@ import copy
 import os
 import pickle
 import random
+import tensorflow as tf
 
 import boto3 as boto3
 import numpy as np
-from Pillow import Image
+from PIL import Image
 from sklearn.model_selection import train_test_split
 
 
@@ -49,7 +50,7 @@ class PrepareDatasets:
     Only retain images that can be loaded successfully as a (255, 255, 3) image.
     """
 
-    def remove_bad_imagaes(self):
+    def remove_bad_images(self):
         old_image_paths = copy.copy(self.image_paths)
         image_paths = []
         for path in old_image_paths:
@@ -77,10 +78,10 @@ class PrepareDatasets:
     """
 
     def pickle_partition(self, partition):
-        pickle_partition_path = os.path.join(self.partition_path, "partition.p")
-        with open(pickle_partition_path, 'wb') as obj:
-            pickle.dump(partition, obj)
-        print("wrote {}".format(pickle_partition_path))
+        open_file_path = os.path.join(self.partition_path, "partition.p")
+        with open(open_file_path, 'wb') as open_file:
+            pickle.dump(partition, open_file)
+        print("wrote {}".format(open_file_path))
 
     """
     Create labels dictionary for our dataset for the training of the model
@@ -101,8 +102,29 @@ class PrepareDatasets:
             print("wrote {}".format(pickle_partition_path))
 
 
+def init_dataset(
+        subset,
+        validation_split=0.2,
+        seed=123,
+        data_directory=os.path.join('.', 'data', 'ml_images'),
+        image_height=255,
+        image_width=255,
+        batch_size=25
+):
+    return tf.keras.preprocessing.image_dataset_from_directory(
+        data_directory,
+        validation_split=validation_split,
+        subset=subset,
+        seed=seed,
+        image_size=(image_height, image_width),
+        batch_size=batch_size
+    )
+
+
 """
 Iterable Dataset class allowing streaming large datasets rather than loading into RAM.
+
+For now, this will be held off from being used. 
 """
 
 
