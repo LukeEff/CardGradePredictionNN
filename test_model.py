@@ -2,6 +2,7 @@ import os
 import tensorflow as tf
 import dataset as ds
 
+
 def test_model(img_path):
     model_path = os.path.join('.', 'models', 'vgg16_acc_save_foobar')  # TODO change name of model to the real name
     print("load {}".format(model_path))
